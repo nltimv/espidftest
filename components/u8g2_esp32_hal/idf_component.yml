@@ -14,9 +14,7 @@ dependencies:
   #   # `public` flag doesn't have an effect dependencies of the `main` component.
   #   # All dependencies of `main` are public by default.
   #   public: true
-  espressif/button: '>=4,<5'
+  espressif/i2c_bus:
+    version: '>=1,<2'
   u8g2:
     git: https://github.com/olikraus/u8g2.git
-
-#  u8g2-hal-esp-idf:
-#    git: https://github.com/mkfrey/u8g2-hal-esp-idf.git
