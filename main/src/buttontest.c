@@ -6,7 +6,6 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
-#include "driver/i2c.h"
 #include "u8g2.h"
 
 #include "buttontest.h"
@@ -17,20 +16,17 @@
 #define TAG "buttontest"
 
 // —— User-configurable pins ——
-#define PIN_SDA   21
-#define PIN_SCL   22
+#define PIN_SDA   4
+#define PIN_SCL   5
 
-#define BTN1_GPIO                  17
-#define BTN2_GPIO                  5
-#define BTN3_GPIO                  18
-#define BTN4_GPIO                  19
+#define BTN1_GPIO                  39
+#define BTN2_GPIO                  40
+#define BTN3_GPIO                  41
+#define BTN4_GPIO                  42
 
 // Shared button state array
 static bool button_state[4]      = { false };  // current state
 static bool button_prev_state[4] = { false };  // last state
-
-// U8g2 HAL
-static u8g2_esp32_hal_t u8g2_esp32_hal = U8G2_ESP32_HAL_DEFAULT;
 
 // U8g2 handle
 static u8g2_t u8g2;
@@ -74,16 +70,17 @@ void buttontest_button_task(void *pvParameters)
 // Display update task
 void buttontest_lcd_task(void *pvParameters)
 {
-    u8g2_esp32_hal.bus.i2c.sda = PIN_SDA;
-    u8g2_esp32_hal.bus.i2c.scl = PIN_SCL;
-    u8g2_esp32_hal_init(u8g2_esp32_hal);
+    u8g2_hal_config_t u8g2_hal_config = U8G2_HAL_CONFIG_DEFAULT;
+    u8g2_hal_config.i2c.scl = PIN_SCL;
+    u8g2_hal_config.i2c.sda = PIN_SDA;
+    u8g2_hal_init(&u8g2_hal_config);
 
     // initialize the display
     u8g2_Setup_st7567_i2c_jlx12864_f(
         &u8g2,
         U8G2_R2,
-        u8g2_esp32_i2c_byte_cb,
-        u8g2_esp32_gpio_and_delay_cb
+        u8g2_esp32_hal_i2c_byte_cb,
+        u8g2_esp32_hal_gpio_and_delay_cb
     );
     // assign the I2C bus and address
     u8g2_SetI2CAddress(&u8g2, 0x3F<<1);

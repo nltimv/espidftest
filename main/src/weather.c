@@ -13,8 +13,8 @@
 #include <u8g2_esp32_hal.h>
 #include "weather.h"
 
-#define PIN_SDA   21
-#define PIN_SCL   22
+#define PIN_SDA   4
+#define PIN_SCL   5
 
 static const char *TAG = "weather";
 static uint16_t count = 1;
@@ -29,20 +29,20 @@ static void delay_ms(uint32_t ms) {
 /*  e.g. for HW‐I2C on a ST7567 128×64 you might use:                        */
 /*---------------------------------------------------------------------------*/
 static u8g2_t u8g2;
-static u8g2_esp32_hal_t u8g2_esp32_hal = U8G2_ESP32_HAL_DEFAULT;
+
 /* u8g2_Setup_ST7567_JLX12864_F_HW_I2C is a macro from u8g2.h */
 void init_display(void) {
   ESP_LOGI(TAG, "Initializing display");
-  u8g2_esp32_hal.bus.i2c.sda = PIN_SDA;
-  u8g2_esp32_hal.bus.i2c.scl = PIN_SCL;
-  u8g2_esp32_hal_init(u8g2_esp32_hal);
+  u8g2_hal_config_t u8g2_hal_config = U8G2_HAL_CONFIG_DEFAULT;
+  u8g2_hal_config.i2c.scl = PIN_SCL;
+  u8g2_hal_config.i2c.sda = PIN_SDA;
+  u8g2_hal_init(&u8g2_hal_config);
 
-  /* rotation = U8G2_R2, I²C address 0x3F<<1 */
   u8g2_Setup_st7567_i2c_jlx12864_f(
     &u8g2,
     U8G2_R2,
-    u8g2_esp32_i2c_byte_cb,
-    u8g2_esp32_gpio_and_delay_cb);
+    u8g2_esp32_hal_i2c_byte_cb,
+    u8g2_esp32_hal_gpio_and_delay_cb);
 
   u8g2_SetI2CAddress(&u8g2, 0x3F << 1);
   u8g2_InitDisplay(&u8g2);
@@ -165,7 +165,7 @@ static void draw(const char *s, uint8_t symbol) {
   while (1) {
     drawScrollString(offset, s);
     u8g2_SendBuffer(&u8g2);
-    //delay_ms(20);
+    delay_ms(20);
     offset += 2;
     /* when text has fully scrolled out of sight, stop */
     if (offset > (int16_t)(len*8 + 1)) break;

@@ -17,6 +17,5 @@ dependencies:
   espressif/button: '>=4,<5'
   u8g2:
     git: https://github.com/olikraus/u8g2.git
-
-#  u8g2-hal-esp-idf:
-#    git: https://github.com/mkfrey/u8g2-hal-esp-idf.git
+  nltimv/u8g2_esp32_hal:
+    git: https://github.com/nltimv/u8g2_esp32_hal.git

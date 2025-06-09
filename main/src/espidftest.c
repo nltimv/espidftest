@@ -5,8 +5,8 @@
 #include "buttontest.h"
 
 void app_main() {
-    //xTaskCreate(weather_run, "weather_run", 2048, NULL, 1, NULL);
-    xTaskCreate(buttontest_lcd_task, "buttontest_lcd_task", 2048, NULL, 5, NULL);
-    xTaskCreate(buttontest_button_task, "buttontest_button_task", 2048, NULL, 5, NULL);
+    xTaskCreate(weather_run, "weather_run", 4096, NULL, 1, NULL);
+    //xTaskCreate(buttontest_lcd_task, "buttontest_lcd_task", 4096, NULL, 5, NULL);
+    //xTaskCreate(buttontest_button_task, "buttontest_button_task", 4096, NULL, 5, NULL);
 }
 
